@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Les Joies du Code TV",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Affiche un meme de lesjoiesducode.fr en plein écran (mode aléatoire ou chronologique), refresh toutes les 10 minutes. Idéal pour un écran TV en open space.",
   "host_permissions": [
     "https://lesjoiesducode.fr/*"
