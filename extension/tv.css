@@ -1,0 +1,140 @@
+:root {
+  --bg: #0a0a0a;
+  --fg: #f5f5f5;
+  --muted: #888;
+  --accent: #ff6b6b;
+  --header-h: 9vh;
+  --footer-h: 5vh;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  width: 100%;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  overflow: hidden;
+}
+
+body {
+  display: grid;
+  grid-template-rows: var(--header-h) 1fr var(--footer-h);
+  height: 100vh;
+}
+
+/* ===== Header (title) — compact ===== */
+#header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3vw;
+  min-height: 0;
+}
+
+#title {
+  font-size: clamp(1.2rem, 2.4vw, 2.4rem);
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.15;
+  text-wrap: balance;
+  max-width: 95vw;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ===== Media — fills the available space ===== */
+#media-wrap {
+  position: relative;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#media-wrap img,
+#media-wrap video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /* Crisp upscale for pixel-art memes; falls back to smooth on photos */
+  image-rendering: -webkit-optimize-contrast;
+}
+
+/* Error / loading content inside #media-wrap shouldn't be stretched */
+#media-wrap > .error {
+  width: auto;
+  height: auto;
+}
+
+/* ===== Footer — compact horizontal bar ===== */
+#footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2vw;
+  font-size: clamp(0.75rem, 0.95vw, 0.95rem);
+  color: var(--muted);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+#footer button {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--muted);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: inherit;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+#footer button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--fg);
+}
+
+#countdown {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.5px;
+  margin-left: 8px;
+  min-width: 5ch;
+  text-align: right;
+}
+
+#brand { opacity: 0.6; }
+
+.controls {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.loading {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.error {
+  color: var(--accent);
+  font-size: 1.2rem;
+  text-align: center;
+  max-width: 60vw;
+  line-height: 1.6;
+  padding: 2vh;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fade-in 0.5s ease;
+}

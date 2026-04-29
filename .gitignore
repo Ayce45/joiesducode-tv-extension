@@ -1,0 +1,15 @@
+# Build artifacts
+*.zip
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node (if ever needed)
+node_modules/

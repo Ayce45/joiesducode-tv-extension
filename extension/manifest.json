@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "Les Joies du Code TV",
+  "version": "1.0.0",
+  "description": "Affiche un meme de lesjoiesducode.fr en plein écran (mode aléatoire ou chronologique), refresh toutes les 10 minutes. Idéal pour un écran TV en open space.",
+  "host_permissions": [
+    "https://lesjoiesducode.fr/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Ouvrir l'affichage TV"
+  },
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  }
+}

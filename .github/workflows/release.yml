@@ -1,0 +1,79 @@
+name: Release extension
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag à créer (ex: v1.0.0). Doit correspondre à la version du manifest.'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Read manifest version
+        id: manifest
+        run: |
+          VERSION=$(node -p "require('./extension/manifest.json').version")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Manifest version: $VERSION"
+
+      - name: Determine release tag
+        id: tag
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TAG="${{ inputs.tag }}"
+          else
+            TAG="${GITHUB_REF#refs/tags/}"
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "Release tag: $TAG"
+
+      - name: Verify tag matches manifest version
+        run: |
+          TAG="${{ steps.tag.outputs.tag }}"
+          MANIFEST_VERSION="${{ steps.manifest.outputs.version }}"
+          EXPECTED="v$MANIFEST_VERSION"
+          if [ "$TAG" != "$EXPECTED" ]; then
+            echo "::error::Le tag '$TAG' ne correspond pas à la version du manifest ('$EXPECTED'). Mets à jour extension/manifest.json ou crée le bon tag."
+            exit 1
+          fi
+          echo "Tag $TAG matches manifest version $MANIFEST_VERSION ✓"
+
+      - name: Build extension zip
+        run: |
+          VERSION="${{ steps.manifest.outputs.version }}"
+          FOLDER_NAME="joiesducode-tv-extension"
+          ZIP_NAME="joiesducode-tv-extension-v${VERSION}.zip"
+          # Copy to a properly-named folder so extraction gives a clean dir
+          cp -r extension "$FOLDER_NAME"
+          zip -r "$ZIP_NAME" "$FOLDER_NAME" -x "*.DS_Store" "*.swp"
+          ls -la "$ZIP_NAME"
+          echo "ZIP_NAME=${ZIP_NAME}" >> "$GITHUB_ENV"
+
+      - name: Create tag (workflow_dispatch only)
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          TAG="${{ steps.tag.outputs.tag }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag "$TAG"
+          git push origin "$TAG"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: ${{ steps.tag.outputs.tag }}
+          generate_release_notes: true
+          files: ${{ env.ZIP_NAME }}
