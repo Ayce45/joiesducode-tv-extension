@@ -171,6 +171,10 @@ function extractMemeFromArticleHtml(html) {
   // 3. Last-resort fallback: og:image (will be the cropped social-share version)
   const ogImage = doc.querySelector('meta[property="og:image"]')?.content;
   if (ogImage) {
+    console.warn(
+      '[ljdc-tv] No body image found in article, falling back to og:image (small social preview):',
+      ogImage
+    );
     const fullImg = ogImage.replace(
       /-\d+x\d+(\.(jpe?g|png|webp|gif))(\?.*)?$/i,
       '$1$3'
@@ -291,7 +295,9 @@ function tickCountdown() {
 // ===== Mode toggle =====
 function updateModeBtn() {
   if (mode === 'chrono') {
-    modeBtn.textContent = `📅 Chrono · #${chronoIndex + 1}`;
+    modeBtn.textContent = chronoIndex === 0
+      ? '📅 Chrono'
+      : `📅 Chrono · #${chronoIndex}`;
     modeBtn.title = 'Mode : du plus récent au plus vieux';
   } else {
     modeBtn.textContent = '🎲 Random';
@@ -364,6 +370,10 @@ setInterval(updateModeBtn, 1000);
 setInterval(tickCountdown, 1000);
 
 // ===== Boot =====
+try {
+  const v = chrome.runtime.getManifest().version;
+  console.log(`[ljdc-tv] Les Joies du Code TV — extension v${v}`);
+} catch (_) { /* not in extension context */ }
 loadState();
 updateModeBtn();
 cycle();
