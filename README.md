@@ -1,5 +1,7 @@
 # Les Joies du Code TV
 
+<img width="1922" height="1108" alt="image" src="https://github.com/user-attachments/assets/c198067f-63f0-4239-8376-9c0cf2bad649" />
+
 Extension Chrome (Manifest V3) qui affiche un meme de [lesjoiesducode.fr](https://lesjoiesducode.fr) en plein écran sur une TV, avec refresh automatique toutes les 10 minutes.
 
 Deux modes :
